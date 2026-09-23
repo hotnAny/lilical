@@ -1,0 +1,27 @@
+---
+const wrong = Astro.url.searchParams.has('wrong');
+---
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>lilical</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <style>
+      body { margin: 0; min-height: 100vh; display: grid; place-items: center;
+             font: 15px/1.4 system-ui, sans-serif; background: #f7f7f7; color: #111; }
+      form { display: grid; gap: 10px; width: min(280px, 90vw); }
+      input, button { font: inherit; padding: 8px 10px; border: 1px solid #d9d9d9; border-radius: 6px; }
+      button { background: #2774ae; color: #fff; border-color: #2774ae; cursor: pointer; }
+      .wrong { color: #c8102e; margin: 0; }
+    </style>
+  </head>
+  <body>
+    <form method="post" action="/api/login">
+      <strong>lilical</strong>
+      <input type="password" name="passphrase" placeholder="passphrase" autofocus required />
+      {wrong && <p class="wrong">Wrong passphrase.</p>}
+      <button>Enter</button>
+    </form>
+  </body>
+</html>

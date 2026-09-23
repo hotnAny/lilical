@@ -1,0 +1,16 @@
+{
+  "name": "lilical",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@astrojs/vercel": "^8.2.11",
+    "@types/node": "^26.6.2",
+    "astro": "^5.18.2",
+    "typescript": "^5.9.3"
+  }
+}

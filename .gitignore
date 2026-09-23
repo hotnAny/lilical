@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.astro/
+.vercel/
+.env
+.env.*
+!.env.example
+
+# Data written locally by `astro dev` when no GitHub credentials are set
+.data/
+
+# macOS
+.DS_Store
