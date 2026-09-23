@@ -83,6 +83,13 @@ in blue.
 
 ## 2. Settings
 
+- **Option: move unchecked items to today.** When on, unchecked one-off items from
+  past days move to today, into the same list, and show as overdue (red). This runs
+  when the app opens, when you return to its tab, and when you turn the option on.
+  Repeating items, checked items and items in hidden lists stay where they are.
+  Turning it off stops future moves; items already moved stay where they are. The
+  option is saved with the data, so it applies on every device.
+
 - **A list of lists.** Each list has:
   - `name` (required)
   - `shows on`: all days (default), weekdays only, or weekends only
@@ -119,8 +126,9 @@ in blue.
 
 ### 3.2 Item lifetime
 
-- Items belong to their date. An unchecked item **stays on its day** when that day
-  passes. It isn't carried forward. Dragging (§3.1) is how you reschedule it.
+- Items belong to their date. By default an unchecked item **stays on its day** when
+  that day passes; dragging (§3.1) is how you reschedule it. The Settings option
+  (§2) can instead move it to today automatically.
 - Days in the past that still have unchecked items are flagged: a red dot in the week
   strip and a red date in the month calendar (§1.1).
 - On a past day, each unchecked one-off item is shown in **red text**. Repeating items
@@ -175,7 +183,8 @@ Item    { id, list_id, date, original_date, text, done: bool, link?, notes?,
         # repeating: occurs on repeat weekdays from date to until, minus skip;
         # pieces split by a weekday change share `series`
         # overdue := date > original_date
-Event   { id, date, end?, title }   # date = first day, end = last day
+Event   { id, date, end?, title }
+Settings { carryOver?: bool }   # date = first day, end = last day
 ```
 
 ## 5. Platform

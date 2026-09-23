@@ -103,8 +103,20 @@ async function refresh() {
 // Pick up edits from other devices when coming back to the tab.
 window.addEventListener('focus', () => {
   const editing = document.activeElement instanceof HTMLInputElement;
-  if (!sending && queue.length === 0 && !editing) void refresh();
+  if (!sending && queue.length === 0 && !editing) void refresh().then(carryOver);
 });
+
+// Settings option: move unchecked one-off items from past days to today, same
+// list. They then show as overdue (red). Repeating items and hidden lists stay put.
+function carryOver() {
+  if (!data.settings?.carryOver) return;
+  const t = today();
+  const hidden = new Set(data.lists.filter((l) => l.hidden).map((l) => l.id));
+  const ops: Op[] = data.items
+    .filter((i) => !isRepeating(i) && !i.done && i.date < t && !hidden.has(i.list_id))
+    .map((i) => ({ op: 'moveItem', id: i.id, date: t }));
+  if (ops.length) run(...ops);
+}
 
 function toast(msg: string) {
   const t = $('#toast');
@@ -306,7 +318,10 @@ function renderSettings() {
     .join('');
   $('#main').innerHTML = `
     <div class="settings">
-      <div class="dayhead">Settings: lists</div>
+      <div class="dayhead">Settings</div>
+      <label class="opt"><input type="checkbox" id="optCarry" ${data.settings?.carryOver ? 'checked' : ''} />
+        Move unchecked items from past days to today (same list, shown in red)</label>
+      <h3 class="shead">Lists</h3>
       <p class="empty">Drag ⠿ to reorder. Lists appear on the day view in this order: left to right, then top to bottom.
         A hidden list disappears from every day; its items are kept.</p>
       <table>
@@ -556,6 +571,10 @@ document.addEventListener('submit', (ev) => {
 document.addEventListener('change', (ev) => {
   const t = ev.target as HTMLInputElement;
   let v: string | null;
+  if (t.id === 'optCarry') {
+    run({ op: 'setSetting', carryOver: t.checked });
+    return carryOver();
+  }
   if ((v = t.getAttribute('data-toggle'))) return run({ op: 'updateItem', id: v, on: selected, done: t.checked });
   if ((v = t.getAttribute('data-lname'))) {
     const name = t.value.trim();
@@ -720,3 +739,4 @@ document.addEventListener('dragend', () => {
 });
 
 render();
+carryOver();

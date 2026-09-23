@@ -40,6 +40,7 @@ export interface Data {
   lists: List[];
   items: Item[];
   events: CalEvent[];
+  settings?: { carryOver?: boolean }; // carryOver: move unchecked past one-offs to today
 }
 
 export type Op =
@@ -71,7 +72,8 @@ export type Op =
   | { op: 'deleteList'; id: string }
   | { op: 'addEvent'; id: string; date: Day; end?: Day; title: string }
   | { op: 'updateEvent'; id: string; title?: string }
-  | { op: 'deleteEvent'; id: string };
+  | { op: 'deleteEvent'; id: string }
+  | { op: 'setSetting'; carryOver: boolean };
 
 export function emptyData(): Data {
   return {
@@ -280,6 +282,9 @@ export function apply(d: Data, o: Op): void {
     }
     case 'deleteEvent':
       d.events = d.events.filter((e) => e.id !== o.id);
+      break;
+    case 'setSetting':
+      d.settings = { ...d.settings, carryOver: o.carryOver };
       break;
   }
 }

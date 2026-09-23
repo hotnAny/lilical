@@ -34,3 +34,4 @@
 - instead of "remove this day" and "delete all days", just show a single "Delete", clicking which will then display something that prompts the user to confirm deleting today only or all days (2026-09-23)
 - past to-do items that didn't get checked off will turn red → one-offs only; repeating items stay unflagged (2026-09-23)
 - for non-repeated items, need to warn user when they click delete but having them click again to confirm deletion (2026-09-23)
+- in settings, add an option to automatically move previously-unchecked items to the current day, same list, shown as red → skips repeating, checked, hidden-list items (2026-09-23)
