@@ -100,9 +100,8 @@ const data = await getData();
       .tag { background: var(--gold); color: var(--black); font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 999px; }
       .url { display: inline-flex; vertical-align: -2px; color: var(--blue); padding: 0 2px; }
       .url:hover { color: var(--black); }
-      .board { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 270px; gap: 16px; }
-      .cards { overflow: auto; display: flex; gap: 16px; align-items: flex-start; }
-      .col { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 16px; }
+      .board { flex: 1; min-height: 0; display: grid; grid-template-columns: 290px 270px; justify-content: start; gap: 16px; }
+      .cards { overflow: auto; display: flex; flex-direction: column; gap: 16px; }
       .fixed { display: flex; flex-direction: column; gap: 16px; min-height: 0; }
       .fixed .card { flex: 1; min-height: 0; overflow: auto; }
       .empty { color: var(--grey); }

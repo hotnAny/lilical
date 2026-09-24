@@ -19,8 +19,8 @@ From top to bottom:
    - `<` / `>` arrows above it go to the previous / next month.
    - Today is circled.
    - Past days with unchecked items show their date in **red**.
-2. **Week strip**: seven stacked rows labeled with full day names, Monday to Sunday
-   (weeks start Monday).
+2. **Week strip**: seven stacked rows labeled with full day names, Sunday to Saturday
+   (weeks start Sunday; the month calendar too).
    - The selected day is shaded (W in the sketch; 9/23/2026 is a Wednesday).
    - Every row has a **dot** to its left. By default it's a grey dotted outline, so it
      doesn't look like a radio button. Clicking it opens a
@@ -36,7 +36,7 @@ From top to bottom:
 
 1. **Date heading** with the day's **event tags** to its right: one gold pill per event
    (§3.3), e.g. `XXX DEADLINE`. (The sketch drew a full-width banner; replaced by tags.)
-2. **User lists** as cards, laid out in columns, e.g. *My Research*, *Anything Goes*,
+2. **User lists** as cards, stacked in one column, e.g. *My Research*, *Anything Goes*,
    *Human Writes*.
    - Each card has a title and items. Each item has a drag handle ⠿ on its left, then a
      circular checkbox.
@@ -45,9 +45,9 @@ From top to bottom:
      shows the URL. Editing the item shows the full text, URL included.
    - Items are edited inline: click the text to edit it. Deleting happens in the
      item's details popup (§3.4). Checked items stay visible, struck through.
-   - Card **size fits its content**. The cards fill the space left of the fixed column
-     in as many columns as fit, and read **in Settings order, left to right, then top
-     to bottom**: card *i* goes into column *i* mod *n*.
+   - Card **size fits its content**. The cards stack in **one fixed-width column**, top to
+     bottom **in Settings order**, left of the fixed column. The UI keeps this narrow
+     width; the space to its right is left empty for now.
 3. **Fixed column** on the right with two built-in lists:
    - **À la carte** (top)
    - **Misc** (bottom)
@@ -153,7 +153,7 @@ in blue.
   Delete · Cancel · Save.
 - A URL typed into an item's text moves to the Link field when the popup opens. A
   link shows as a link icon on the card.
-- **Repeat** is a row of small weekday circles, Monday to Sunday, muted (pale with grey
+- **Repeat** is a row of small weekday circles, Sunday to Saturday, muted (pale with grey
   letters) until chosen, then solid blue. Weekdays where the item's list doesn't show
   are faded further and can't be selected. A repeating item shows ↻ before its label.
 - A repeating item appears on the chosen weekdays and each day is checked off

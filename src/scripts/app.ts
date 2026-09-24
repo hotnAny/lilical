@@ -32,9 +32,10 @@ const addDays = (s: Day, n: number) => {
   d.setDate(d.getDate() + n);
   return fmt(d);
 };
-const monday = (s: Day) => addDays(s, -((parse(s).getDay() + 6) % 7));
+const sunday = (s: Day) => addDays(s, -parse(s).getDay());
 const today = () => fmt(new Date());
-const WD = ['M', 'T', 'W', 'Th', 'F', 'Sa', 'Su'];
+const WD = ['Su', 'M', 'T', 'W', 'Th', 'F', 'Sa'];
+// Indexed like the model: 0 = Monday. Weeks display Sunday first.
 const WEEKDAY = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
 // ---- view state ----
@@ -165,7 +166,7 @@ function render() {
 function renderMonth() {
   const [y, m] = viewMonth.split('-').map(Number);
   const first = new Date(y, m - 1, 1);
-  const start = monday(fmt(first));
+  const start = sunday(fmt(first));
   const late = lateDays();
   const t = today();
   const label = first.toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
@@ -188,7 +189,7 @@ function renderMonth() {
 }
 
 function renderWeek() {
-  const start = monday(selected);
+  const start = sunday(selected);
   const late = lateDays();
   const t = today();
   let rows = '';
@@ -202,7 +203,7 @@ function renderWeek() {
     rows += `
       <div class="wk-row${d === selected ? ' sel' : ''}${d === t ? ' today' : ''}" data-day="${d}">
         <button class="${dot}" data-dot="${d}" title="${esc(title)}" aria-label="Events on ${d}"></button>
-        <span class="wd">${WEEKDAY[i]}</span>
+        <span class="wd">${WEEKDAY[(i + 6) % 7]}</span>
         <span class="dn">${parse(d).getMonth() + 1}/${parse(d).getDate()}</span>
       </div>`;
   }
@@ -257,10 +258,6 @@ function card(l: List): string {
     </section>`;
 }
 
-// Minimum card column width and gap; must match .cards / .col in index.astro.
-const COL_W = 240;
-const GAP = 16;
-
 function renderDay() {
   const lists = data.lists.filter((l) => !l.builtin && showsOn(data, l, selected));
   const alacarte = data.lists.find((l) => l.builtin === 'alacarte')!;
@@ -275,25 +272,11 @@ function renderDay() {
       <div class="cards"></div>
       <div class="fixed">${card(alacarte)}${card(misc)}</div>
     </div>`;
-  // Deal cards into columns round-robin, so they read in Settings order
-  // left to right, then top to bottom.
-  const box = $('#main .cards');
-  if (!lists.length) return void (box.innerHTML = '<p class="empty">No lists on this day. Add one in Settings.</p>');
-  const n = Math.max(1, Math.floor((box.clientWidth + GAP) / (COL_W + GAP)));
-  const cols = Array.from({ length: n }, () => [] as string[]);
-  lists.forEach((l, i) => cols[i % n].push(card(l)));
-  box.innerHTML = cols.map((c) => `<div class="col">${c.join('')}</div>`).join('');
-  cardCols = n;
+  // One column, stacked top to bottom in Settings order.
+  $('#main .cards').innerHTML = lists.length
+    ? lists.map(card).join('')
+    : '<p class="empty">No lists on this day. Add one in Settings.</p>';
 }
-
-// Re-deal the cards when the width changes how many columns fit.
-let cardCols = 0;
-new ResizeObserver(() => {
-  const box = document.querySelector<HTMLElement>('#main .cards');
-  if (view !== 'day' || !box) return;
-  const n = Math.max(1, Math.floor((box.clientWidth + GAP) / (COL_W + GAP)));
-  if (n !== cardCols) render();
-}).observe($('#main'));
 
 function renderSettings() {
   const rows = data.lists
@@ -322,7 +305,7 @@ function renderSettings() {
       <label class="opt"><input type="checkbox" id="optCarry" ${data.settings?.carryOver ? 'checked' : ''} />
         Move unchecked items from past days to today (same list, shown in red)</label>
       <h3 class="shead">Lists</h3>
-      <p class="empty">Drag ⠿ to reorder. Lists appear on the day view in this order: left to right, then top to bottom.
+      <p class="empty">Drag ⠿ to reorder. Lists appear on the day view in this order, top to bottom.
         A hidden list disappears from every day; its items are kept.</p>
       <table>
         <tr><th></th><th>Name</th><th>Shows on</th><th></th><th></th></tr>
@@ -392,7 +375,8 @@ function openItem(id: string) {
   const label = found ? i.text.replace(found, '').replace(/\s{2,}/g, ' ').trim() : i.text;
   const link = i.link ?? found ?? '';
   const allowed = listWeekdays(l);
-  const circles = WD_SHORT.map((w, n) => {
+  const circles = [6, 0, 1, 2, 3, 4, 5].map((n) => {
+    const w = WD_SHORT[n];
     const ok = allowed.includes(n);
     const on = ok && !!i.repeat?.includes(n);
     return `<button type="button" class="wdc${on ? ' on' : ''}" data-wd="${n}" ${ok ? '' : 'disabled'}
