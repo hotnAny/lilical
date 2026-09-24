@@ -724,3 +724,16 @@ document.addEventListener('dragend', () => {
 
 render();
 carryOver();
+
+// Installed app (standalone window): on its first launch, shrink the window to
+// the content width. Later launches keep whatever size the user set.
+if (matchMedia('(display-mode: standalone)').matches) {
+  try {
+    if (!localStorage.getItem('lilical_fitted')) {
+      const right = document.querySelector('#main .fixed')?.getBoundingClientRect().right;
+      const pad = parseFloat(getComputedStyle($('#main')).paddingRight);
+      if (right) window.resizeTo(Math.ceil(right + pad) + (outerWidth - innerWidth), outerHeight);
+      localStorage.setItem('lilical_fitted', '1');
+    }
+  } catch {}
+}
