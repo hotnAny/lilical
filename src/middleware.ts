@@ -1,7 +1,8 @@
 import { defineMiddleware } from 'astro:middleware';
 import { COOKIE, matches, passphrase, token } from './lib/auth';
 
-const OPEN = ['/login', '/api/login', '/favicon.svg'];
+// The manifest and icons are fetched without the cookie, so they must stay open.
+const OPEN = ['/login', '/api/login', '/favicon.svg', '/manifest.webmanifest', '/icon-192.png', '/icon-512.png'];
 
 export const onRequest = defineMiddleware(async (ctx, next) => {
   const p = passphrase();

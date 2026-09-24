@@ -18,3 +18,9 @@ passphrase. Set `LILICAL_PASSPHRASE` to try the login page.
    `GITHUB_TOKEN`, `GITHUB_REPO` (`owner/lilical-data`), `LILICAL_PASSPHRASE`.
 4. If you add a custom domain, add it to `security.allowedDomains` in
    `astro.config.mjs`, or the login form will be rejected.
+
+## Run as a standalone app
+
+lilical is an installable web app. In Chrome, open the deployed URL, log in, then
+click the install icon at the right end of the address bar (or ⋮ → Cast, save, and
+share → Install page as app). It opens in its own window with the lily in the Dock.
