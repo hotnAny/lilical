@@ -35,3 +35,6 @@
 - past to-do items that didn't get checked off will turn red → one-offs only; repeating items stay unflagged (2026-09-23)
 - for non-repeated items, need to warn user when they click delete but having them click again to confirm deletion (2026-09-23)
 - in settings, add an option to automatically move previously-unchecked items to the current day, same list, shown as red → skips repeating, checked, hidden-list items (2026-09-23)
+- update the calendar view: a week starts with sunday → month grid, week strip, and Repeat circles all run Sunday→Saturday; stored weekday numbers unchanged (2026-09-24)
+- vertically stack custom lists based on their order. keep the current width so the entire UI can be narrower (i.e., leaving some space on the right side of the screen, which i have not figured out how to make use of yet) → one 290px column + 270px fixed column, empty space to the right (2026-09-24)
+- chrome has some web-based standalone app that runs outside of the browser. is there a way to run this app that way? → yes: made it an installable web app (manifest + icons); Chrome shows "Install lilical"; steps in README.md (2026-09-24)
