@@ -725,15 +725,15 @@ document.addEventListener('dragend', () => {
 render();
 carryOver();
 
-// Installed app (standalone window): on its first launch, shrink the window to
-// the content width. Later launches keep whatever size the user set.
+// Installed app (standalone window): size the window to the content width on
+// every launch. Runs after load, since Chrome can ignore a resize while it is
+// still opening the window or restoring its saved size.
+function fitWindow() {
+  const right = document.querySelector('#main .fixed')?.getBoundingClientRect().right;
+  if (!right) return;
+  const pad = parseFloat(getComputedStyle($('#main')).paddingRight);
+  window.resizeTo(Math.ceil(right + pad) + (outerWidth - innerWidth), outerHeight);
+}
 if (matchMedia('(display-mode: standalone)').matches) {
-  try {
-    if (!localStorage.getItem('lilical_fitted')) {
-      const right = document.querySelector('#main .fixed')?.getBoundingClientRect().right;
-      const pad = parseFloat(getComputedStyle($('#main')).paddingRight);
-      if (right) window.resizeTo(Math.ceil(right + pad) + (outerWidth - innerWidth), outerHeight);
-      localStorage.setItem('lilical_fitted', '1');
-    }
-  } catch {}
+  window.addEventListener('load', () => setTimeout(fitWindow, 300));
 }
