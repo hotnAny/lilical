@@ -16,7 +16,7 @@ export interface Item {
   id: string;
   list_id: string;
   date: Day;
-  original_date: Day; // the date first given; overdue := date > original_date
+  original_date: Day; // the date it is due on; overdue := date > original_date (auto-carried)
   text: string;
   done: boolean; // one-off items; repeating items use done_on
   link?: string;
@@ -63,7 +63,9 @@ export type Op =
   // Repeating: move one day's copy to another date as a new one-off item.
   | { op: 'moveDay'; id: string; from: Day; to: Day; new_id: string }
   | { op: 'deleteItem'; id: string; all?: boolean } // all: every piece of its series
-  | { op: 'moveItem'; id: string; date: Day }
+  // reschedule: a manual drag, so the new date becomes the due date and the
+  // item is not overdue. Without it the old due date stays (carry-over).
+  | { op: 'moveItem'; id: string; date: Day; reschedule?: boolean }
   // Same day: put the item in list_id, just before item `before` (null = at the end).
   | { op: 'placeItem'; id: string; list_id: string; before: string | null }
   | { op: 'addList'; id: string; name: string; days?: List['days'] }
@@ -206,7 +208,7 @@ export function apply(d: Data, o: Op): void {
         id: o.new_id,
         list_id: i.list_id,
         date: o.to,
-        original_date: o.from,
+        original_date: o.to, // a manual drag reschedules it, so it is not overdue
         text: i.text,
         done: false,
         link: i.link,
@@ -223,6 +225,7 @@ export function apply(d: Data, o: Op): void {
       const i = item(o.id);
       if (!i) break;
       i.date = o.date;
+      if (o.reschedule) i.original_date = o.date;
       break;
     }
     case 'placeItem': {

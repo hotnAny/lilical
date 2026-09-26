@@ -68,7 +68,7 @@ Each color has one meaning.
 | White | `#FFFFFF` (panes `#F7F7F7`) | background |
 | UCLA Blue | `#2774AE` | selected day, today's circle, checkboxes/focus |
 | UCLA Gold | `#FFD100` | events: tag and dot |
-| Red | `#C8102E` | overdue: moved items, unchecked past days |
+| Red | `#C8102E` | overdue: carried-over items, unchecked past days |
 
 **Week-strip dot** (combines the two dot meanings from §1.1):
 
@@ -79,7 +79,7 @@ Each color has one meaning.
 **Month calendar:** past dates with unchecked items are in red text. Today is circled
 in blue.
 
-**Overdue item** (§3.1): red text or a red left border on the item row.
+**Overdue item** (§2): red text or a red left border on the item row.
 
 ## 2. Settings
 
@@ -117,8 +117,9 @@ in blue.
 - On that date the item automatically goes into **the same list** it came from.
 - If the list doesn't normally show on that date (e.g. a weekday list dropped onto a
   Saturday), it still appears there because it now has an item on that day (§2).
-- It is **highlighted to show that it's overdue**, but only when it's moved to a
-  *later* date than the one it was first given. Moving it earlier doesn't mark it.
+- Dragging **is** rescheduling: the date you drop it on becomes the date it's due, so
+  the item is **not** marked overdue, whether you move it later or earlier. Only the
+  automatic move (§2) marks an item overdue.
 
 - Drag it onto another card on the same day to move it into that list, or within its
   own card to reorder. A blue line shows where it will land. Neither counts as
@@ -132,7 +133,8 @@ in blue.
 - Days in the past that still have unchecked items are flagged: a red dot in the week
   strip and a red date in the month calendar (§1.1).
 - On a past day, each unchecked one-off item is shown in **red text**. Repeating items
-  aren't (§3.4). Items that were moved later (overdue) also get a red left border.
+  aren't (§3.4). Items the app moved forward on its own (§2) also get a red left
+  border; ones you dragged yourself don't.
 
 ### 3.3 Events
 
@@ -170,7 +172,8 @@ in blue.
   item it asks **Only <this day>** / **All days** (every linked piece of the series) /
   Cancel.
 - **Dragging** one day's copy onto another date moves only that copy: it becomes a
-  one-off item there (overdue if later), and the series continues. Dragging it to
+  one-off item there (not overdue — dragging is rescheduling, §3.1), and the series
+  continues. Dragging it to
   another list or position changes the whole series.
 
 ## 4. Data model (derived)
@@ -182,7 +185,8 @@ Item    { id, list_id, date, original_date, text, done: bool, link?, notes?,
           repeat?: weekday[] (0 = Mon), done_on?: date[], skip?: date[], until?, series? }
         # repeating: occurs on repeat weekdays from date to until, minus skip;
         # pieces split by a weekday change share `series`
-        # overdue := date > original_date
+        # overdue := date > original_date; a manual drag moves both, the
+        #   automatic carry-over (§2) moves only date
 Event   { id, date, end?, title }
 Settings { carryOver?: bool }   # date = first day, end = last day
 ```

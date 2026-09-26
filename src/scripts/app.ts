@@ -663,7 +663,7 @@ document.addEventListener('drop', (ev) => {
     const to = d.dataset.day!;
     if (isRepeating(item)) {
       if (to !== selected) run({ op: 'moveDay', id: item.id, from: selected, to, new_id: uid() });
-    } else if (item.date !== to) run({ op: 'moveItem', id: item.id, date: to });
+    } else if (item.date !== to) run({ op: 'moveItem', id: item.id, date: to, reschedule: true });
   } else {
     const list_id = spot!.card.dataset.list!;
     const before = spot!.before === item.id ? null : spot!.before;
