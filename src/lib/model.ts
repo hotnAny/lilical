@@ -224,6 +224,9 @@ export function apply(d: Data, o: Op): void {
     case 'moveItem': {
       const i = item(o.id);
       if (!i) break;
+      // Carry-over is decided on the client's copy, which can be stale. On the
+      // latest data, skip items checked off since then or already moved later.
+      if (!o.reschedule && (isDone(i, i.date) || i.date >= o.date)) break;
       i.date = o.date;
       if (o.reschedule) i.original_date = o.date;
       break;
